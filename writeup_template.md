@@ -87,7 +87,7 @@ Here are all the sliding windows (there are a lot of them).
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-The pipeline detects cars pretty well on the test images. Note that you can see some false positives. We will deal on these in the next section
+The pipeline detects cars pretty well on the test images. Note that you can see some false positives. We will deal on these in the next section.
 
 ![alt text][static_examples]
 
@@ -101,16 +101,16 @@ Here's a [link to my video result](./output_images/project5_output.mp4)
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
-I recorded the positions of positive detections in each frame of the video.  From the positive detections I created a heatmap and then thresholded that map to identify vehicle positions.  I then used `scipy.ndimage.measurements.label()` to identify individual blobs in the heatmap.  I then assumed each blob corresponded to a vehicle.  I constructed bounding boxes to cover the area of each blob detected.
+The windows that are marked as positive by the classifier are recorded. Then I threshold to find the areas that cover multiple positive windows, and show it as a heatmap. The areas that do not span enough number of windows (default threshold = 1) are disregarded.
 
-Here's an example result showing the heatmap from a series of frames of video, the result of `scipy.ndimage.measurements.label()` and the bounding boxes then overlaid on the last frame of video:
+I used `scipy.ndimage.measurements.label()` to identify distinct areas in the heatmap. Each distinct area is assumed to correspond to a vehicle. Finally I draw bounding boxes to cover those detected areas.
 
-### Here are six frames and their corresponding heatmaps:
+##### Here are three test images and their corresponding heatmaps:
 
 ![alt text][heatmaps]
 
 
-### Here the resulting bounding boxes are drawn onto the last frame in the series:
+##### Here the resulting bounding boxes are drawn onto the last frame in the series:
 ![alt text][pipeline_outputs]
 
 
@@ -121,4 +121,8 @@ Here's an example result showing the heatmap from a series of frames of video, t
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.
+There are multiple difficulties with this approach to detect cars. First, it is not clear how to find good features for the classifier. More features might lead to a better classifier, but might cause overfitting. Also the more features used the slower the classifier works.
+
+Secondly, sliding window approach is slow because we need to cover the whole frame, and with different window scales. Then it is tricky to avoid false positives. Drawing bounding boxes can be problematic because the windows have fixed size, but the cars vary in size.
+
+Many fellow students in the program have succesfully used a deep learning approach for this assignment. I will try it in the future. 
